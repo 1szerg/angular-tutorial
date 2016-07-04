@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
 import {Hero} from "./hero";
-import { HeroDetailComponent } from './hero-detail.component';
+import {HeroDetailComponent} from './hero-detail.component';
 import {HeroService} from "./hero.service";
 
 @Component({
@@ -9,6 +9,7 @@ import {HeroService} from "./hero.service";
     template: `
 <h1>{{title}}</h1>
 <h2>My Heroes</h2>
+<input type="button" (click)="loadHeroes()"/>
 <ul class="heroes">
     <li *ngFor="let hero of heroes "
      [class.selected]="hero === selectedHero"
@@ -21,25 +22,35 @@ import {HeroService} from "./hero.service";
     directives: [HeroDetailComponent],
     providers: [HeroService]
 })
-export class AppComponent implements OnInit{
-    ngOnInit():any {
-        this.getHeroes();
-        return undefined;
-    }
+export class AppComponent implements OnInit {
     selectedHero:Hero;
     title = 'Tour of Heroes';
-    constructor(private heroService: HeroService) { }
-    heroes: Hero[];
+
+    constructor(private heroService:HeroService) {
+    }
+
+    heroes:Hero[];
+    error;
+
+    ngOnInit():any {
+        return undefined;
+    }
+
+    loadHeroes() {
+        this.getHeroes();
+    }
 
     onSelect(hero:Hero) {
-        if(hero == this.selectedHero){
+        if (hero == this.selectedHero) {
             this.selectedHero = null;
-        }else{
+        } else {
             this.selectedHero = hero;
         }
     }
 
     getHeroes() {
-        this.heroes = this.heroService.getHeroes();
+        this.error = "";
+        this.heroes = [];
+        this.heroService.getHeroes(this.heroes, this.error);
     }
 }
